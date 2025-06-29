@@ -19,6 +19,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { signInSchema } from "../validations/sign-in.validation";
 import { AUTH_ERRORS } from "../constants/authErrors";
+import { setLocalStorageItem } from "@/utilities/localStorage.utility";
 
 export const SignInForm = () => {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -52,7 +53,7 @@ export const SignInForm = () => {
     }
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email: form.email,
         password: form.password,
       });
@@ -64,6 +65,9 @@ export const SignInForm = () => {
           error.message;
         setError(customMessage);
       } else {
+        if (data?.user) {
+          setLocalStorageItem("user", data.user);
+        }
         mutate();
         router.push(privateRoutes.dashboard);
       }
