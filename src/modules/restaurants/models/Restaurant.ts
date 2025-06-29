@@ -1,9 +1,8 @@
 export interface Restaurant {
-  id: string;
+  id: number;
   name: string;
-  description?: string;
-  image?: string;
-  address?: string;
-  phone?: string;
-  category?: string;
+  description: string;
+  image: string;
+  cuisine: string;
+  rating: number;
 }
