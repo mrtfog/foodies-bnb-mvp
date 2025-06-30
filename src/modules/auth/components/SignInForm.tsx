@@ -72,7 +72,11 @@ export const SignInForm = () => {
         router.push(privateRoutes.dashboard);
       }
     } catch (error) {
-      setError("Error inesperado al iniciar sesión");
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("Error inesperado al iniciar sesión");
+      }
     } finally {
       setLoading(false);
     }
