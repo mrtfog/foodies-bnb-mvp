@@ -1,39 +1,18 @@
-import React from "react";
 import { Card } from "@/components/ui/card";
-import RestaurantCard from "./RestaurantCard";
+import useSWR from "swr";
 import { Restaurant } from "../models/Restaurant";
+import { getAllRestaurants } from "../services/restaurants.service";
+import RestaurantCard from "./RestaurantCard";
 
-const restaurants: Restaurant[] = [
-  {
-    id: 1,
-    name: "El Ristorante de la Bella Vista",
-    description:
-      "Autentico restaurante italiano con pasta casera y pizzas al horno en un ambiente elegante.",
-    image: "/placeholder.svg",
-    cuisine: "Italiano",
-    rating: 4.8,
-  },
-  {
-    id: 2,
-    name: "El Jardín de los Sushis",
-    description:
-      "Experiencia culinaria japonesa tradicional con sushi fresco, sashimi y menús kaiseki estacionales.",
-    image: "/placeholder.svg",
-    cuisine: "Japonés",
-    rating: 4.9,
-  },
-  {
-    id: 3,
-    name: "El Palacio de los Sabores",
-    description:
-      "Bistro francés moderno que ofrece interpretaciones contemporáneas de platos clásicos con ingredientes locales.",
-    image: "/placeholder.svg",
-    cuisine: "Francés",
-    rating: 4.7,
-  },
-];
+const fetcher = async () => await getAllRestaurants();
 
 const FoodieDashboard = () => {
+  const {
+    data: restaurants,
+    error,
+    isLoading,
+  } = useSWR("restaurants", fetcher);
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="text-center mb-12">
@@ -46,10 +25,22 @@ const FoodieDashboard = () => {
         </p>
       </div>
 
+      {isLoading && (
+        <div className="text-center text-gray-500">
+          Cargando restaurantes...
+        </div>
+      )}
+      {error && (
+        <div className="text-center text-red-500">
+          Error al cargar restaurantes
+        </div>
+      )}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {restaurants.map((restaurant) => (
-          <RestaurantCard key={restaurant.id} restaurant={restaurant} />
-        ))}
+        {restaurants &&
+          restaurants.length > 0 &&
+          restaurants.map((restaurant: Restaurant) => (
+            <RestaurantCard key={restaurant.id} restaurant={restaurant} />
+          ))}
       </div>
 
       <div className="mt-16 text-center">
