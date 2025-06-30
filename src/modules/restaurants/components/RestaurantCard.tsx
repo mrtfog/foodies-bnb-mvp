@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import Image from "next/image";
 
 interface Restaurant {
   id: number;
@@ -31,10 +32,12 @@ const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant }) => {
   return (
     <Card className="group overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 bg-white border border-gray-200">
       <div className="relative overflow-hidden">
-        <img
+        <Image
           src={restaurant.image}
           alt={restaurant.name}
           className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
+          width={500}
+          height={500}
         />
         <div className="absolute top-4 right-4">
           <Badge
